@@ -1,5 +1,3 @@
-# app.py
-
 from flask import Flask
 from config import Config
 from models.models import db
@@ -22,16 +20,13 @@ def create_app():
     app.register_blueprint(alternatif_bp, url_prefix='/api/alternatif')
     app.register_blueprint(penilaian_bp, url_prefix='/api/penilaian')
     app.register_blueprint(saw_bp, url_prefix='/api/saw')
-    # Daftar blueprint (routing) nanti ditambah di sini
-    # from routes.kriteria_routes import kriteria_bp
-    # app.register_blueprint(kriteria_bp, url_prefix='/api/kriteria')
-
     return app
 
-# Untuk deployment dengan gunicorn (Railway)
 app = create_app()
 
+# Tambahkan ini agar Railway bikin semua tabel saat app jalan
+with app.app_context():
+    db.create_all()
+
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
     app.run(debug=True)
